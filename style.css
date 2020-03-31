@@ -1,0 +1,9 @@
+body {
+	background-color: black;
+}
+
+.nameLogo {
+	color: white;
+	font-size: 64;
+	font-family: Arial, Helvetica, sans-serif;
+}
