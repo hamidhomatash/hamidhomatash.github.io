@@ -12,7 +12,7 @@ body {
 
 /* Style the top navigation bar */
 .navbar {
-	background-color: #333;
+	background-color: rgb(48,48,48);
 	width: 100%;
 }
 
@@ -50,13 +50,14 @@ body {
 }
 
 #header {
-	background-image: linear-gradient(rgb(32,32,32), black);
+	background-image: linear-gradient(black, rgb(48,48,48));
 	text-align: center;
 }
 #content {
-	background-image: linear-gradient(black, rgb(32,32,32), black);
+	background-image: linear-gradient(rgb(48,48,48)), black, rgb(48,48,48));
 }
 #footer {
-	background-image: linear-gradient(black, rgb(32,32,32));
+	background-image: linear-gradient(rgb(48,48,48), black);
 	text-align: center;
+	padding: 5px 5px;
 }
