@@ -60,7 +60,7 @@ p {
 	text-align: center;
 }
 #content {
-	background-image: linear-gradient(rgb(48,48,48), black, rgb(48,48,48));
+	background-image: linear-gradient(rgb(48,48,48), black 5%, black 95%, rgb(48,48,48));
 }
 #footer {
 	background-image: linear-gradient(rgb(48,48,48), black);
