@@ -1,94 +1,113 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Decision Making</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-mobile">
-      <canvas id="unity-canvas"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Decision Making</div>
-      </div>
-    </div>
-	<!-- The core Firebase JS SDK is always required and must be listed first -->
-	<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+<!-- Unity WebGL Template from: https://seansleblanc.itch.io/better-minimal-webgl-template -->
 
-	<!-- TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/setup#available-libraries -->
-	<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Decision Making</title>
+	<style>
+		html,
+		body {
+			background: #000;
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+			padding: 0;
+			margin: 0;
+		}
 
-	<script>
-		// Your web app's Firebase configuration
-		// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-		var firebaseConfig = {
-			apiKey: "AIzaSyDvEWJJ0AvvfxLqg6cyXY4iqb1NFHqzeEo",
-			authDomain: "piratechess-bab18.firebaseapp.com",
-			databaseURL: "https://piratechess-bab18.firebaseio.com",
-			projectId: "piratechess-bab18",
-			storageBucket: "piratechess-bab18.appspot.com",
-			messagingSenderId: "1052926024489",
-			appId: "1:1052926024489:web:761e0cccc4054c4fb1f538",
-			measurementId: "G-K9V7P9CXMF"
-		};
-		// Initialize Firebase
-		firebase.initializeApp(firebaseConfig);
-		firebase.analytics();
-	</script>
-	
-    <script>
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebGL.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/WebGL.data",
-        frameworkUrl: buildUrl + "/WebGL.framework.js",
-        codeUrl: buildUrl + "/WebGL.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "Decision Making",
-        productVersion: "1.0",
-      };
+		div#gameContainer {
+			background: transparent !important;
+			position: absolute;
+		}
 
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+		div#gameContainer canvas {
+			position: absolute;
+		}
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        config.devicePixelRatio = 1;
-      } else {
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-      }
-      loadingBar.style.display = "block";
+		div#gameContainer canvas[data-pixel-art="true"] {
+			position: absolute;
+			image-rendering: optimizeSpeed;
+			image-rendering: -webkit-crisp-edges;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: optimize-contrast;
+			image-rendering: pixelated;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+	</style>
+</head>
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
-    </script>
-  </body>
+<body>
+	<div id="gameContainer">
+		<canvas id="unity-canvas" data-pixel-art="true"></canvas>
+		<script src="Build/WebGL.loader.js"></script>
+		<script>
+			var canvas = document.querySelector("#unity-canvas");
+			var config = {
+				dataUrl: "Build/WebGL.data",
+				frameworkUrl: "Build/WebGL.framework.js",
+				codeUrl: "Build/WebGL.wasm",
+				streamingAssetsUrl: "StreamingAssets",
+				companyName: "DefaultCompany",
+				productName: "Decision Making",
+				productVersion: "1.0",
+			};
+			var scaleToFit;
+			try {
+				scaleToFit = !!JSON.parse("true");
+			} catch (e) {
+				scaleToFit = true;
+			}
+			function progressHandler(progress) {
+				var percent = progress * 100 + '%';
+				canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
+				canvas.style.backgroundSize = '100% 1rem';
+			}
+			function onResize() {
+				var container = canvas.parentElement;
+				var w;
+				var h;
+
+				if (scaleToFit) {
+					w = window.innerWidth;
+					h = window.innerHeight;
+
+					var r = 540 / 960;
+
+					if (w * r > window.innerHeight) {
+						w = Math.min(w, Math.ceil(h / r));
+					}
+					h = Math.floor(w * r);
+				} else {
+					w = 960;
+					h = 540;
+				}
+
+				container.style.width = canvas.style.width = w + "px";
+				container.style.height = canvas.style.height = h + "px";
+				container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+			}
+			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+				canvas = instance.Module.canvas;
+				onResize();
+			});
+			window.addEventListener('resize', onResize);
+			onResize();
+
+			if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+				// Mobile device style: fill the whole browser client area with the game canvas:
+				const meta = document.createElement('meta');
+				meta.name = 'viewport';
+				meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+				document.getElementsByTagName('head')[0].appendChild(meta);
+			}
+		</script>
+	</div>
+</body>
+
 </html>
