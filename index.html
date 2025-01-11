@@ -56,32 +56,5 @@
 		</p>
 	</div>
 
-	<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
-	
-	<google-cast-launcher></google-cast-launcher>
-	
-	<script>
-		window['__onGCastApiAvailable'] = function(isAvailable) {
-			if (isAvailable) {
-				initializeCastApi();
-				
-				
-				var mediaInfo = new chrome.cast.media.MediaInfo("https://hamidhomatash.com/cast-test/AlisonBurke-TiredActor-1741825404673896633.mp4", "video/mp4");
-				var request = new chrome.cast.media.LoadRequest(mediaInfo);
-				castSession.loadMedia(request).then(
-					function() { console.log('Load succeed'); },
-					function(errorCode) { console.log('Error code: ' + errorCode); });
-			}
-		};
-		
-		initializeCastApi = function() {
-			cast.framework.CastContext.getInstance().setOptions({
-				receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-				autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
-				});
-		};
-		AlisonBurke-TiredActor-1741825404673896633.mp4
-</script>
-
 </body>
 </html>

@@ -45,7 +45,7 @@
 		</div>
 	</div>
 
-	<button onclick="myFunction()">Click me</button>
+	<!--<button onclick="myFunction()">Click me</button>-->
 
 	<div id="footer">
 		<p class="centerContent">
@@ -53,43 +53,31 @@
 		</p>
 	</div>
 
-	<!-- The core Firebase JS SDK is always required and must be listed first -->
-	<script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-app.js"></script>
-
-	<!-- TODO: Add SDKs for Firebase products that you want to use
-		 https://firebase.google.com/docs/web/setup#available-libraries -->
-	<script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-analytics.js"></script>
-
-	<script src="https://www.gstatic.com/firebasejs/8.2.2/firebase-database.js"></script>
-
+	<script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+	
+	<google-cast-launcher></google-cast-launcher>
+	
 	<script>
-		// Your web app's Firebase configuration
-		// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-		var firebaseConfig = {
-			apiKey: "AIzaSyDvEWJJ0AvvfxLqg6cyXY4iqb1NFHqzeEo",
-			authDomain: "piratechess-bab18.firebaseapp.com",
-			databaseURL: "https://piratechess-bab18.firebaseio.com",
-			projectId: "piratechess-bab18",
-			storageBucket: "piratechess-bab18.appspot.com",
-			messagingSenderId: "1052926024489",
-			appId: "1:1052926024489:web:761e0cccc4054c4fb1f538",
-			measurementId: "G-K9V7P9CXMF"
-		};
-		// Initialize Firebase
-		firebase.initializeApp(firebaseConfig);
-		firebase.analytics();
-	</script>
-
-	<script>
-		function myFunction() {
-			firebase.database().ref('leaderboards/ai').orderByChild('score').limitToLast(2).once('value').then(function (dataSnapshot) {
-			
-				dataSnapshot.forEach(function(snapshot){
-					console.log(JSON.stringify(snapshot.val()));
-				});
+		window['__onGCastApiAvailable'] = function(isAvailable) {
+			if (isAvailable) {
+				initializeCastApi();
 				
-			});
-		}
+				
+				var mediaInfo = new chrome.cast.media.MediaInfo("https://hamidhomatash.com/cast-test/AlisonBurke-TiredActor-1741825404673896633.mp4", "video/mp4");
+				var request = new chrome.cast.media.LoadRequest(mediaInfo);
+				castSession.loadMedia(request).then(
+					function() { console.log('Load succeed'); },
+					function(errorCode) { console.log('Error code: ' + errorCode); });
+			}
+		};
+		
+		initializeCastApi = function() {
+			cast.framework.CastContext.getInstance().setOptions({
+				receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+				autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+				});
+		};
+		
 	</script>
 </body>
 </html>
